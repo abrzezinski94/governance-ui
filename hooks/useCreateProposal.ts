@@ -1,4 +1,4 @@
-import { ProgramAccount, Governance } from '@solana/spl-governance'
+import { ProgramAccount, Governance, VoteType } from '@solana/spl-governance'
 import {
   createProposal,
   InstructionDataWithHoldUpTime,
@@ -28,6 +28,7 @@ export default function useCreateProposal() {
     instructionsData,
     voteByCouncil = false,
     isDraft = false,
+    voteType = VoteType.SINGLE_CHOICE,
   }: {
     title: string
     description: string
@@ -35,6 +36,7 @@ export default function useCreateProposal() {
     instructionsData: InstructionDataWithHoldUpTime[]
     voteByCouncil?: boolean
     isDraft?: boolean
+    voteType?: VoteType
   }) => {
     const ownTokenRecord = ownVoterWeight.getTokenRecordToCreateProposal(
       governance!.account.config
@@ -69,7 +71,8 @@ export default function useCreateProposal() {
       selectedGovernance?.account?.proposalCount,
       instructionsData,
       isDraft,
-      client
+      client,
+      voteType
     )
   }
   return { handleCreateProposal }

@@ -67,7 +67,8 @@ export const createProposal = async (
   proposalIndex: number,
   instructionsData: InstructionDataWithHoldUpTime[],
   isDraft: boolean,
-  client?: VotingClient
+  client?: VotingClient,
+  voteType = VoteType.MULTI_CHOICE(2)
 ): Promise<PublicKey> => {
   const instructions: TransactionInstruction[] = []
 
@@ -91,9 +92,8 @@ export const createProposal = async (
   )
 
   // V2 Approve/Deny configuration
-  const voteType = VoteType.SINGLE_CHOICE
-  const options = ['Approve']
-  const useDenyOption = true
+  const options = ['Approve', 'ELO']
+  const useDenyOption = false
 
   //will run only if plugin is connected with realm
   const voterWeight = await client?.withUpdateVoterWeightRecord(

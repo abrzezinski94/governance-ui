@@ -222,7 +222,6 @@ const New = () => {
         selectedGovernance = (await fetchRealmGovernance(
           governance.pubkey
         )) as ProgramAccount<Governance>
-
         proposalAddress = await handleCreateProposal({
           title: form.title,
           description: form.description,

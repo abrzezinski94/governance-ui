@@ -5,7 +5,6 @@ import useRealm from './useRealm'
 
 export default function useProposalVotes(proposal?: Proposal) {
   const { realm, mint, councilMint, governances } = useRealm()
-
   const governance =
     proposal && governances[proposal.governance?.toBase58()]?.account
 
@@ -36,21 +35,21 @@ export default function useProposalVotes(proposal?: Proposal) {
     proposal,
     proposalMint
   )
+  const isMultiChoice = proposal.options?.length > 1
 
-  const minimumYesVotes =
-    fmtTokenAmount(maxVoteWeight, proposalMint.decimals) *
-    (voteThresholdPct / 100)
+  const minimumYesVotes = !isMultiChoice
+    ? fmtTokenAmount(maxVoteWeight, proposalMint.decimals) *
+      (voteThresholdPct / 100)
+    : 0
   const yesVotePct = calculatePct(proposal.getYesVoteCount(), maxVoteWeight)
   const yesVoteProgress = (yesVotePct / voteThresholdPct) * 100
 
-  const yesVoteCount = fmtTokenAmount(
-    proposal.getYesVoteCount(),
-    proposalMint.decimals
-  )
-  const noVoteCount = fmtTokenAmount(
-    proposal.getNoVoteCount(),
-    proposalMint.decimals
-  )
+  const yesVoteCount = !isMultiChoice
+    ? fmtTokenAmount(proposal.getYesVoteCount(), proposalMint.decimals)
+    : 0
+  const noVoteCount = !isMultiChoice
+    ? fmtTokenAmount(proposal.getNoVoteCount(), proposalMint.decimals)
+    : 0
 
   const totalVoteCount = yesVoteCount + noVoteCount
 
@@ -76,5 +75,6 @@ export default function useProposalVotes(proposal?: Proposal) {
     relativeNoVotes,
     minimumYesVotes,
     yesVotesRequired,
+    isMultiChoice,
   }
 }
