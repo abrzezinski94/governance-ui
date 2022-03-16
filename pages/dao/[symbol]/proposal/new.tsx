@@ -57,6 +57,10 @@ import MakeAddSpotMarket from './components/instructions/Mango/MakeAddSpotMarket
 import MakeChangeSpotMarket from './components/instructions/Mango/MakeChangeSpotMarket'
 import MakeCreatePerpMarket from './components/instructions/Mango/MakeCreatePerpMarket'
 import useCreateProposal from '@hooks/useCreateProposal'
+import RealmConfig from './components/instructions/RealmConfig'
+import CreateNftPluginRegistrar from './components/instructions/NftVotingPlugin/CreateRegistrar'
+import CreateNftPluginMaxVoterWeightRecord from './components/instructions/NftVotingPlugin/CreateMaxVoterWeightRecord'
+import ConfigureNftPluginCollection from './components/instructions/NftVotingPlugin/ConfigureCollection'
 
 const schema = yup.object().shape({
   title: yup.string().required('Title is required'),
@@ -303,6 +307,29 @@ const New = () => {
         return <Mint index={idx} governance={governance}></Mint>
       case Instructions.Base64:
         return <CustomBase64 index={idx} governance={governance}></CustomBase64>
+      case Instructions.CreateNftPluginRegistrar:
+        return (
+          <CreateNftPluginRegistrar
+            index={idx}
+            governance={governance}
+          ></CreateNftPluginRegistrar>
+        )
+      case Instructions.ConfigureNftPluginCollection:
+        return (
+          <ConfigureNftPluginCollection
+            index={idx}
+            governance={governance}
+          ></ConfigureNftPluginCollection>
+        )
+      case Instructions.CreateNftPluginMaxVoterWeight:
+        return (
+          <CreateNftPluginMaxVoterWeightRecord
+            index={idx}
+            governance={governance}
+          ></CreateNftPluginMaxVoterWeightRecord>
+        )
+      case Instructions.RealmConfig:
+        return <RealmConfig index={idx} governance={governance}></RealmConfig>
       case Instructions.None:
         return <Empty index={idx} governance={governance}></Empty>
       case Instructions.MangoAddOracle:

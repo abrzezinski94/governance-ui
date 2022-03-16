@@ -33,6 +33,7 @@ import { ChevronRightIcon, ExclamationIcon } from '@heroicons/react/outline'
 import useQueryContext from '@hooks/useQueryContext'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
+import useVotePluginsClientStore from 'stores/useVotePluginsClientStore'
 
 const TokenBalanceCard = ({ proposal }: { proposal?: Option<Proposal> }) => {
   const router = useRouter()
@@ -142,6 +143,9 @@ const TokenDeposit = ({
   const connection = useWalletStore((s) => s.connection.current)
   const { fetchWalletTokenAccounts, fetchRealm } = useWalletStore(
     (s) => s.actions
+  )
+  const client = useVotePluginsClientStore(
+    (s) => s.state.currentRealmVotingClient
   )
   const {
     realm,
@@ -275,7 +279,7 @@ const TokenDeposit = ({
             }
           }
         }
-
+        await client.withRelinquishVote(instructions, proposal.pubkey)
         // Note: We might hit single transaction limits here (accounts and size) if user has too many unrelinquished votes
         // It's not going to be an issue for now due to the limited number of proposals so I'm leaving it for now
         // As a temp. work around I'm leaving the 'Release Tokens' button on finalized Proposal to make it possible to release the tokens from one Proposal at a time

@@ -85,6 +85,14 @@ export default function useGovernanceAssets() {
       ownVoterWeight.canCreateProposal(gov.account.config)
     )
 
+  const realmAuth =
+    realm &&
+    governancesArray.find(
+      (x) => x.pubkey.toBase58() === realm.account.authority?.toBase58()
+    )
+  const canUseAuthorityInstruction =
+    realmAuth && ownVoterWeight.canCreateProposal(realmAuth?.account.config)
+
   const getAvailableInstructions = () => {
     return availableInstructions.filter((itx) => itx.isVisible)
   }
@@ -235,6 +243,26 @@ export default function useGovernanceAssets() {
       id: Instructions.WithdrawObligationCollateralAndRedeemReserveLiquidity,
       name: 'Solend: Withdraw Funds',
       isVisible: canUseAnyInstruction,
+    },
+    {
+      id: Instructions.RealmConfig,
+      name: 'Realm Config',
+      isVisible: canUseAuthorityInstruction,
+    },
+    {
+      id: Instructions.CreateNftPluginRegistrar,
+      name: 'Create NFT plugin registrar',
+      isVisible: canUseAuthorityInstruction,
+    },
+    {
+      id: Instructions.ConfigureNftPluginCollection,
+      name: 'Configure NFT plugin collection',
+      isVisible: canUseAuthorityInstruction,
+    },
+    {
+      id: Instructions.CreateNftPluginMaxVoterWeight,
+      name: 'Create NFT plugin max voter weight',
+      isVisible: canUseAuthorityInstruction,
     },
     {
       id: Instructions.None,

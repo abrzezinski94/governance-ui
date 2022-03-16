@@ -12,10 +12,10 @@ import Footer from '@components/Footer'
 import { useEffect } from 'react'
 import useDepositStore from 'VoteStakeRegistry/stores/useDepositStore'
 import useWalletStore from 'stores/useWalletStore'
-import { useVoteRegistry } from 'VoteStakeRegistry/hooks/useVoteRegistry'
+import { useVotingPlugins } from '@hooks/useVotingPlugins'
 import ErrorBoundary from '@components/ErrorBoundary'
 import { WalletIdentityProvider } from '@cardinal/namespaces-components'
-import useVoteStakeRegistryClientStore from 'VoteStakeRegistry/stores/voteStakeRegistryClientStore'
+import useVotePluginsClientStore from 'stores/useVotePluginsClientStore'
 import useMarketStore from 'Strategies/store/marketStore'
 import handleGovernanceAssetsStore from '@hooks/handleGovernanceAssetsStore'
 import tokenService from '@utils/services/token'
@@ -24,7 +24,7 @@ function App({ Component, pageProps }) {
   useHydrateStore()
   useWallet()
   handleRouterHistory()
-  useVoteRegistry()
+  useVotingPlugins()
   handleGovernanceAssetsStore()
   useEffect(() => {
     tokenService.fetchSolanaTokenList()
@@ -34,7 +34,7 @@ function App({ Component, pageProps }) {
   const { realm, realmInfo, symbol, ownTokenRecord } = useRealm()
   const wallet = useWalletStore((s) => s.current)
   const connection = useWalletStore((s) => s.connection)
-  const client = useVoteStakeRegistryClientStore((s) => s.state.client)
+  const client = useVotePluginsClientStore((s) => s.state.vsrClient)
   const realmName = realmInfo?.displayName ?? realm?.account?.name
 
   const title = realmName ? `${realmName}` : 'Solana Governance'
@@ -72,7 +72,7 @@ function App({ Component, pageProps }) {
     wallet?.connected,
     client,
   ])
-  //remove Do not add <script> tags using next/head warning
+  //hack to remove 'Do not add <script> tags using next/head warning'
   useEffect(() => {
     const changeFavicon = (link) => {
       let $favicon = document.querySelector('link[rel="icon"]')
@@ -94,7 +94,6 @@ function App({ Component, pageProps }) {
     changeFavicon(faviconUrl)
   }, [faviconUrl])
   useEffect(() => {
-    console.log(title)
     document.title = title
   }, [title])
   return (

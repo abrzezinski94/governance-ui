@@ -20,8 +20,7 @@ import { Vote } from '@solana/spl-governance'
 
 import { withCastVote } from '@solana/spl-governance'
 import { sendTransaction } from '../utils/send'
-import { withUpdateVoterWeightRecord } from 'VoteStakeRegistry/sdk/withUpdateVoterWeightRecord'
-import { VsrClient } from '@blockworks-foundation/voter-stake-registry-client'
+import { VotingClient } from 'stores/useVotePluginsClientStore'
 
 export async function castVote(
   { connection, wallet, programId, walletPubkey }: RpcContext,
@@ -30,7 +29,7 @@ export async function castVote(
   tokeOwnerRecord: PublicKey,
   yesNoVote: YesNoVote,
   message?: ChatMessageBody | undefined,
-  client?: VsrClient
+  votingPlugin?: VotingClient
 ) {
   const signers: Keypair[] = []
   const instructions: TransactionInstruction[] = []
@@ -45,13 +44,12 @@ export async function castVote(
     programId
   )
 
-  //will run only if plugin is connected with realm
-  const voterWeight = await withUpdateVoterWeightRecord(
+  //will run only if any plugin is connected with realm
+  const voterWeight = await votingPlugin?.withUpdateVoterWeightRecord(
     instructions,
-    wallet.publicKey!,
-    realm,
-    client
+    'CastVote'
   )
+  await votingPlugin?.withCastPluginVote(instructions, proposal.pubkey)
 
   await withCastVote(
     instructions,
