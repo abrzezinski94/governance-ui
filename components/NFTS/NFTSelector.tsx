@@ -51,7 +51,6 @@ function NFTSelector(
   const handleGetNfts = async () => {
     setIsLoading(true)
     const nfts = await getNfts(connection.current, ownerPk)
-    console.log(ownerPk.toBase58())
     if (nfts.length === 1) {
       handleSelectNft(nfts[0])
     } else {
