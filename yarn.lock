@@ -2116,10 +2116,10 @@
   dependencies:
     buffer "~6.0.3"
 
-"@solana/governance-program-library@^0.15.0":
-  version "0.15.0"
-  resolved "https://registry.yarnpkg.com/@solana/governance-program-library/-/governance-program-library-0.15.0.tgz#ece347ea315196a836018c4f8d10274c889648c1"
-  integrity sha512-u2uM2BU1VMalJtjAksJB3xOQ/FlkIfRKyp44UPDxiF3njxRtHhVReKqWwL+w3dUvFXkVXCQe3jHOkm97egU2Hw==
+"@solana/governance-program-library@^0.15.1":
+  version "0.15.1"
+  resolved "https://registry.yarnpkg.com/@solana/governance-program-library/-/governance-program-library-0.15.1.tgz#b59d97c2f3e32800d0ea5088037492bc283ee860"
+  integrity sha512-xrhVmaRRf7hDoiX+UI6q4MG5Iym25AuHQmeug2qDFCHWc0eZwLu0Uf+FTG0/5bCXOAgjUmOigbT2hzIT4YIs9w==
   dependencies:
     "@project-serum/anchor" "^0.18.0"
     "@project-serum/serum" "^0.13.61"
@@ -2663,20 +2663,15 @@
   resolved "https://registry.npmjs.org/@types/ms/-/ms-0.7.31.tgz"
   integrity sha512-iiUgKzV9AuaEkZqkOLDIvlQiL6ltuZd9tGcW3gwpnX8JbuiuhFlEGmmFXEXkN50Cvq7Os88IY2v0dkDqXYWVgA==
 
-"@types/node@*":
-  version "17.0.12"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.12.tgz#f7aa331b27f08244888c47b7df126184bc2339c5"
-  integrity sha512-4YpbAsnJXWYK/fpTVFlMIcUIho2AYCi4wg5aNPrG1ng7fn/1/RZfCIpRCiBX+12RVa34RluilnvCqD+g3KiSiA==
+"@types/node@*", "@types/node@>=13.7.0", "@types/node@^17.0.27":
+  version "17.0.27"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.27.tgz#f4df3981ae8268c066e8f49995639f855469081e"
+  integrity sha512-4/Ke7bbWOasuT3kceBZFGakP1dYN2XFd8v2l9bqF2LNWrmeU07JLpp56aEeG6+Q3olqO5TvXpW0yaiYnZJ5CXg==
 
 "@types/node@10.12.18":
   version "10.12.18"
   resolved "https://registry.npmjs.org/@types/node/-/node-10.12.18.tgz"
   integrity sha512-fh+pAqt4xRzPfqA6eh3Z2y6fyZavRIumvjhaCL753+TVkGKGhpPeyrJG2JftD0T9q4GF00KjefsQ+PQNDdWQaQ==
-
-"@types/node@>=13.7.0":
-  version "17.0.21"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.21.tgz#864b987c0c68d07b4345845c3e63b75edd143644"
-  integrity sha512-DBZCJbhII3r90XbQxI8Y9IjjiiOGlZ0Hr32omXIZvwwZ7p4DMMXGrKXVyPfuoBOri9XNtL0UK69jYIBIsRX3QQ==
 
 "@types/node@^12.12.54":
   version "12.20.42"
@@ -2687,10 +2682,6 @@
   version "14.18.12"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-14.18.12.tgz#0d4557fd3b94497d793efd4e7d92df2f83b4ef24"
   integrity sha512-q4jlIR71hUpWTnGhXWcakgkZeHa3CCjcQcnuzU8M891BAWA2jHiziiWEPEkdS5pFsz7H9HJiy8BrK7tBRNrY7A==
-
-"@types/node@^14.14.25":
-  version "14.14.41"
-  resolved "https://registry.npmjs.org/@types/node/-/node-14.14.41.tgz"
 
 "@types/object-hash@^1.3.0":
   version "1.3.4"
