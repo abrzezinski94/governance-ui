@@ -21,9 +21,9 @@ import { Vote } from '@solana/spl-governance'
 import { withCastVote } from '@solana/spl-governance'
 import { VotingClient } from '@utils/uiTypes/VotePlugin'
 import { chunks } from '@utils/helpers'
-import { sendTransactions, SequenceType } from '@utils/sendTransactions'
 import { sendTransaction } from '@utils/send'
 import { NftVoterClient } from '@solana/governance-program-library'
+import { sendTransactionsWithManualRetry } from '@utils/sendTransactionsv2'
 
 export async function castVote(
   { connection, wallet, programId, walletPubkey }: RpcContext,
@@ -114,12 +114,11 @@ export async function castVote(
       ...nftsAccountsChunks,
       ...splInstructionsWithAccountsChunk,
     ]
-    await sendTransactions(
+    await sendTransactionsWithManualRetry(
       connection,
       wallet,
       instructionsChunks,
-      singersMap,
-      SequenceType.Sequential
+      singersMap
     )
   } else {
     const transaction = new Transaction()
