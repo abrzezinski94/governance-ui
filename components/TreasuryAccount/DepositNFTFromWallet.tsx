@@ -13,7 +13,7 @@ import {
 } from '@solana/spl-token'
 import { PublicKey } from '@solana/web3.js'
 import { createATA } from '@utils/ataTools'
-import { getTokenAccountsByMint } from '@utils/tokens'
+import { getOwnedTokenAccounts } from '@utils/tokens'
 import { sendTransaction } from '@utils/send'
 import NFTSelector, { NftSelectorFunctions } from '@components/NFTS/NFTSelector'
 import useGovernanceAssets from '@hooks/useGovernanceAssets'
@@ -35,23 +35,27 @@ const DepositNFTFromWallet = ({ additionalBtns }: { additionalBtns?: any }) => {
     setIsLoading(true)
     setSendingSuccess(false)
     try {
-      const owner = currentAccount?.isSol
-        ? currentAccount.extensions.transferAddress!
-        : currentAccount!.governance!.pubkey
+      const owner = currentAccount!.extensions.transferAddress!
       const ConnectedWalletAddress = wallet?.publicKey
       const selectedNft = selectedNfts[0]
       const nftMintPk = new PublicKey(selectedNft.mint)
-      const tokenAccountsWithNftMint = await getTokenAccountsByMint(
+      const tokenAccountsOfReceiver = await getOwnedTokenAccounts(
         connection.current,
-        nftMintPk.toBase58()
+        owner
+      )
+      const tokenAccountsOfWallet = await getOwnedTokenAccounts(
+        connection.current,
+        ConnectedWalletAddress!
       )
       //we find ata from connected wallet that holds the nft
-      const fromAddress = tokenAccountsWithNftMint.find(
-        (x) => x.account.owner.toBase58() === ConnectedWalletAddress?.toBase58()
+      const fromAddress = tokenAccountsOfWallet.find(
+        (x) =>
+          x.account.amount.cmpn(0) === -1 &&
+          x.account.mint.toBase58() === nftMintPk.toBase58()
       )?.publicKey
       //we check is there ata created for nft before
-      const doseAtaForReciverAddressExisit = tokenAccountsWithNftMint.find(
-        (x) => x.account.owner.toBase58() === owner.toBase58()
+      const doseAtaForReciverAddressExisit = tokenAccountsOfReceiver.find(
+        (x) => x.account.mint.toBase58() === nftMintPk.toBase58()
       )
 
       const ataPk = await Token.getAssociatedTokenAddress(
