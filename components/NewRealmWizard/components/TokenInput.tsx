@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { TokenListProvider, TokenInfo } from '@solana/spl-token-registry'
 import { MintInfo, u64 } from '@solana/spl-token'
 import { PublicKey } from '@solana/web3.js'
@@ -52,6 +52,11 @@ const NOTFOUND_COIN: TokenWithMintInfo = {
 export const COMMUNITY_TOKEN = 'community token'
 export const COUNCIL_TOKEN = 'council token'
 
+let TokenList
+new TokenListProvider().resolve().then((list) => {
+  TokenList = list
+})
+
 export default function TokenInput({
   type,
   control,
@@ -59,7 +64,6 @@ export default function TokenInput({
   disableMinTokenInput = false,
 }) {
   const { connected, connection, current: wallet } = useWalletStore((s) => s)
-  const [tokenList, setTokenList] = useState<TokenInfo[] | undefined>()
   const [tokenMintAddress, setTokenMintAddress] = useState('')
   const [tokenInfo, setTokenInfo] = useState<TokenWithMintInfo | undefined>()
   const validMintAddress = tokenInfo && tokenInfo !== PENDING_COIN
@@ -69,26 +73,19 @@ export default function TokenInput({
     wallet.publicKey.toBase58() === tokenInfo.mint.mintAuthority.toBase58()
   const invalidAddress =
     !validMintAddress && !/finding/.test(tokenInfo?.name ? tokenInfo.name : '')
+  const tokenList = useMemo(
+    () =>
+      TokenList.filterByClusterSlug(
+        connection.cluster === 'mainnet' ? 'mainnet-beta' : connection.cluster
+      ).getList(),
+    [connection.cluster]
+  )
 
   useEffect(() => {
     if (!connected) {
       wallet?.connect()
     }
   }, [wallet])
-
-  useEffect(() => {
-    async function getTokenList() {
-      const tokenList = await new TokenListProvider().resolve()
-      const filteredTokenList = tokenList
-        .filterByClusterSlug(
-          connection.cluster === 'mainnet' ? 'mainnet-beta' : connection.cluster
-        )
-        .getList()
-      setTokenList(filteredTokenList)
-    }
-
-    getTokenList()
-  }, [connection.cluster])
 
   useEffect(() => {
     async function getTokenInfo(tokenMintAddress) {
