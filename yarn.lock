@@ -1566,8 +1566,7 @@
     "@bonfida/name-offers" "^0.0.1"
     "@ethersproject/sha2" "^5.5.0"
 
-
-"@bonfida/spl-name-service@^0.1.50":
+"@bonfida/spl-name-service@^0.1.47", "@bonfida/spl-name-service@^0.1.50":
   version "0.1.50"
   resolved "https://registry.yarnpkg.com/@bonfida/spl-name-service/-/spl-name-service-0.1.50.tgz#462560199f6869fd97c8a19a8a09851ac15191db"
   integrity sha512-StwKh4DPuLm/zSpf2Dk6pFr7gYrV7T+XTSafgoGI+2STXrzipPDtUtwXeF56HGKZ/IkUtZh4SRUd42q6U/MyrA==
@@ -5933,10 +5932,10 @@
   resolved "https://registry.npmjs.org/@types/ms/-/ms-0.7.31.tgz"
   integrity sha512-iiUgKzV9AuaEkZqkOLDIvlQiL6ltuZd9tGcW3gwpnX8JbuiuhFlEGmmFXEXkN50Cvq7Os88IY2v0dkDqXYWVgA==
 
-"@types/node@*", "@types/node@>=13.7.0":
-  version "17.0.38"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.38.tgz#f8bb07c371ccb1903f3752872c89f44006132947"
-  integrity sha512-5jY9RhV7c0Z4Jy09G+NIDTsCZ5G0L5n+Z+p+Y7t5VJHM30bgwzSjVtlcBxqAj+6L/swIlvtOSzr8rBk/aNyV2g==
+"@types/node@*", "@types/node@>=13.7.0", "@types/node@^18.7.17":
+  version "18.7.17"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.7.17.tgz#52438111ea98f77475470fc62d79b9eb96bb2c92"
+  integrity sha512-0UyfUnt02zIuqp7yC8RYtDkp/vo8bFaQ13KkSEvUAohPOAlnVNbj5Fi3fgPSuwzakS+EvvnnZ4x9y7i6ASaSPQ==
 
 "@types/node@10.12.18":
   version "10.12.18"
@@ -5953,7 +5952,7 @@
   resolved "https://registry.npmjs.org/@types/node/-/node-12.20.42.tgz"
   integrity sha512-aI3/oo5DzyiI5R/xAhxxRzfZlWlsbbqdgxfTPkqu/Zt+23GXiJvMCyPJT4+xKSXOnLqoL8jJYMLTwvK2M3a5hw==
 
-"@types/node@^14.0.1", "@types/node@^14.14.25":
+"@types/node@^14.0.1":
   version "14.18.12"
   resolved "https://registry.npmjs.org/@types/node/-/node-14.18.12.tgz"
   integrity sha512-q4jlIR71hUpWTnGhXWcakgkZeHa3CCjcQcnuzU8M891BAWA2jHiziiWEPEkdS5pFsz7H9HJiy8BrK7tBRNrY7A==
