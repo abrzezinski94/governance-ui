@@ -49,7 +49,7 @@
     "@marinade.finance/marinade-ts-sdk": "^2.0.9",
     "@mean-dao/msp": "3.0.1-alpha.13",
     "@metaplex-foundation/js": "^0.12.0",
-    "@metaplex-foundation/mpl-token-metadata": "~2.0",
+    "@metaplex-foundation/mpl-token-metadata": "~2.5",
     "@mithraic-labs/serum-remote": "^0.0.1-rc.16",
     "@next/bundle-analyzer": "^12.1.5",
     "@nfteyez/sol-rayz": "^0.10.2",
