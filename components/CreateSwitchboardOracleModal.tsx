@@ -5,10 +5,14 @@ import useWalletStore from 'stores/useWalletStore'
 import Modal from './Modal'
 import Button from './Button'
 import useWalletOnePointOh from '@hooks/useWalletOnePointOh'
+import { SequenceType } from '@blockworks-foundation/mangolana/lib/globalTypes'
+import { sendTransactionsV3 } from '@utils/sendTransactions'
 
 const CreateSwitchboardOracleModal = ({ isOpen, onClose }) => {
   const connection = useWalletStore((s) => s.connection)
   const wallet = useWalletOnePointOh()
+  const baseTokenName = 'SLIM3'
+  const quoteTokenName = 'USDC'
 
   const create = async () => {
     const payer = wallet!.publicKey!
@@ -21,26 +25,29 @@ const CreateSwitchboardOracleModal = ({ isOpen, onClose }) => {
       program,
       payer,
       {
-        name: 'My Queue',
-        metadata: 'Top Secret',
-        queueSize: 100,
-        reward: 0.00001337,
-        minStake: 10,
-        oracleTimeout: 60,
+        queueSize: 8,
+        //what reward
+        reward: 0,
+        minStake: 0,
+        oracleTimeout: 180,
         slashingEnabled: false,
         unpermissionedFeeds: true,
         unpermissionedVrf: true,
         enableBufferRelayers: false,
       }
     )
-    console.log(queueAccount, txObject)
+
+    const [
+      crankAccount,
+      crankInit,
+    ] = await queueAccount.createCrankInstructions(payer, {
+      maxRows: 1000,
+    })
+
     const [
       oracleAccount,
       txArray,
     ] = await queueAccount.createOracleInstructions(payer, {
-      name: 'My Oracle',
-      metadata: 'Oracle #1',
-      stakeAmount: 10,
       queueAuthorityPubkey: wallet!.publicKey!,
     })
 
@@ -48,17 +55,69 @@ const CreateSwitchboardOracleModal = ({ isOpen, onClose }) => {
       aggregatorAccount,
       txArray1,
     ] = await queueAccount.createFeedInstructions(payer, {
-      name: 'SOL_USD',
-      batchSize: 1,
-      minRequiredOracleResults: 1,
-      minRequiredJobResults: 1,
-      minUpdateDelaySeconds: 10,
+      name: `${baseTokenName}/${quoteTokenName}`,
+      batchSize: 6,
+      minRequiredOracleResults: 3,
+      minRequiredJobResults: 2,
+      minUpdateDelaySeconds: 300,
       queueAuthorityPubkey: wallet!.publicKey!,
-      fundAmount: 0.5,
+      crankDataBuffer: crankAccount.dataBuffer?.publicKey,
+      crankPubkey: crankAccount.publicKey,
+      fundAmount: 0,
       enable: true,
+      basePriorityFee: 0,
+      disableCrank: false,
+      maxPriorityFeeMultiplier: 0,
+      priorityFeeBump: 0,
+      priorityFeeBumpPeriod: 0,
       jobs: [
         {
-          weight: 2,
+          weight: 1,
+          data: OracleJob.encodeDelimited(
+            OracleJob.fromObject({
+              tasks: [
+                {
+                  conditionalTask: {
+                    attempt: [
+                      {
+                        valueTask: {
+                          big: '100',
+                        },
+                      },
+                      {
+                        divideTask: {
+                          job: {
+                            tasks: [
+                              {
+                                jupiterSwapTask: {
+                                  inTokenAddress:
+                                    'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+                                  outTokenAddress:
+                                    'DUALa4FC2yREwZ59PHeu1un4wis36vHRv5hWVBmzykCJ',
+                                  baseAmountString: '100',
+                                },
+                              },
+                            ],
+                          },
+                        },
+                      },
+                    ],
+                    onFailure: [
+                      {
+                        lpExchangeRateTask: {
+                          orcaPoolAddress:
+                            '7yJ4gMRJhEoCR48aPE3EAWRmCoygakik81ZS1sajaTnE',
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            })
+          ).finish(),
+        },
+        {
+          weight: 1,
           data: OracleJob.encodeDelimited(
             OracleJob.fromObject({
               tasks: [
@@ -122,53 +181,34 @@ const CreateSwitchboardOracleModal = ({ isOpen, onClose }) => {
                     ],
                   },
                 },
-                {
-                  conditionalTask: {
-                    attempt: [
-                      {
-                        valueTask: {
-                          big: '100',
-                        },
-                      },
-                      {
-                        divideTask: {
-                          job: {
-                            tasks: [
-                              {
-                                jupiterSwapTask: {
-                                  inTokenAddress:
-                                    'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-                                  outTokenAddress:
-                                    'DUALa4FC2yREwZ59PHeu1un4wis36vHRv5hWVBmzykCJ',
-                                  baseAmountString: '100',
-                                },
-                              },
-                            ],
-                          },
-                        },
-                      },
-                    ],
-                    onFailure: [
-                      {
-                        lpExchangeRateTask: {
-                          orcaPoolAddress:
-                            '7yJ4gMRJhEoCR48aPE3EAWRmCoygakik81ZS1sajaTnE',
-                        },
-                      },
-                    ],
-                  },
-                },
               ],
             })
           ).finish(),
         },
       ],
     })
+    const lockTx = aggregatorAccount.lockInstruction(payer, {})
+
     console.log({
+      crankAccount,
       queueAccount,
       oracleAccount,
       aggregatorAccount,
-      tx: [txObject, ...txArray, ...txArray1],
+      tx: [txObject, crankInit, ...txArray, ...txArray1, lockTx],
+    })
+    const txes = [txObject, crankInit, ...txArray, ...txArray1, lockTx]
+    await sendTransactionsV3({
+      transactionInstructions: [
+        ...txes.map((obj) => ({
+          instructionsSet: obj.ixns.map((tx) => ({
+            transactionInstruction: tx,
+            signers: obj.signers,
+          })),
+          sequenceType: SequenceType.Sequential,
+        })),
+      ],
+      connection: connection.current,
+      wallet: wallet!,
     })
   }
 
