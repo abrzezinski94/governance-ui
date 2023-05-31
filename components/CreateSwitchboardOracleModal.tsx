@@ -26,7 +26,6 @@ const CreateSwitchboardOracleModal = ({ isOpen, onClose }) => {
       payer,
       {
         queueSize: 8,
-        //what reward
         reward: 0,
         minStake: 0,
         oracleTimeout: 180,
@@ -93,7 +92,7 @@ const CreateSwitchboardOracleModal = ({ isOpen, onClose }) => {
                                   inTokenAddress:
                                     'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
                                   outTokenAddress:
-                                    'DUALa4FC2yREwZ59PHeu1un4wis36vHRv5hWVBmzykCJ',
+                                    'xxxxa1sKNGwFtw2kFn8XauW9xq8hBZ5kVtcSesTT9fW',
                                   baseAmountString: '100',
                                 },
                               },
