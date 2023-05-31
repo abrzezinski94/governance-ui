@@ -166,6 +166,7 @@ const LockTokensAccount: React.FC<{
 
   const areLoadedDepositsSameAsOwned =
     JSON.stringify(ownDeposits) === JSON.stringify(deposits)
+
   useEffect(() => {
     if (!areLoadedDepositsSameAsOwned && isOwnerOfDeposits) {
       handleGetDeposits()

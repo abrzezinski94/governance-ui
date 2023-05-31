@@ -9,6 +9,7 @@ import { getRealmExplorerHost } from 'tools/routing'
 
 import useMembersStore from 'stores/useMembersStore'
 import { tryParsePublicKey } from '@tools/core/pubkey'
+import CreateSwitchboardOracleModal from './CreateSwitchboardOracleModal'
 
 const RealmHeader = () => {
   const { fmtUrlWithCluster } = useQueryContext()
@@ -65,6 +66,12 @@ const RealmHeader = () => {
         ) : (
           <div className="w-40 h-10 rounded-md animate-pulse bg-bkg-3" />
         )}
+        <div>
+          <CreateSwitchboardOracleModal
+            onClose={() => null}
+            isOpen={true}
+          ></CreateSwitchboardOracleModal>
+        </div>
         <div className="flex items-center space-x-4">
           {!config?.account.communityTokenConfig.voterWeightAddin && (
             <Link href={fmtUrlWithCluster(`/dao/${symbol}/members`)}>
